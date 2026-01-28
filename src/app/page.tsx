@@ -11,6 +11,9 @@ export default function Home() {
         {/* We pass a video source, but if it's missing, it will fallback to placeholder animation */}
         <CheetahCanvas videoSrc="/sequence/cheetah_run.mp4" loopCount={5} />
 
+        {/* Paw prints background overlay */}
+        <div className="paw-prints-scattered" aria-hidden="true" />
+
         {/* Foreground Content Layer */}
         <OverlaySections />
 
