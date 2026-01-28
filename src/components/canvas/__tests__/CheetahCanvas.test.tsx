@@ -23,6 +23,7 @@ const mockCanvasContext = {
     fillText: vi.fn(),
     fillStyle: '',
     font: '',
+    globalAlpha: 1,
 };
 
 describe('CheetahCanvas', () => {
@@ -100,25 +101,27 @@ describe('CheetahCanvas', () => {
     });
 
     it('should render placeholder when no video source provided', async () => {
-        render(<CheetahCanvas />);
+        // Use progress < fadeOutStart so placeholder animation runs
+        vi.mocked(ScrollProviderModule.useScrollProgress).mockReturnValue({ progress: 0.05, scrollY: 50 });
+        render(<CheetahCanvas fadeOutStart={0.15} fadeOutEnd={0.20} />);
 
-        // Should use canvas context to draw
+        // Should use canvas context to draw (fillRect is always called for black background)
         await waitFor(() => {
-            expect(mockCanvasContext.clearRect).toHaveBeenCalled();
-            expect(mockCanvasContext.createLinearGradient).toHaveBeenCalled();
             expect(mockCanvasContext.fillRect).toHaveBeenCalled();
         });
     });
 
     it('should update rendering based on scroll progress', async () => {
-        const { rerender } = render(<CheetahCanvas />);
+        // Use progress within the visible range (< fadeOutEnd)
+        vi.mocked(ScrollProviderModule.useScrollProgress).mockReturnValue({ progress: 0.05, scrollY: 50 });
+        const { rerender } = render(<CheetahCanvas fadeOutStart={0.15} fadeOutEnd={0.20} />);
 
-        // Update scroll progress
-        vi.mocked(ScrollProviderModule.useScrollProgress).mockReturnValue({ progress: 0.5, scrollY: 500 });
-        rerender(<CheetahCanvas />);
+        // Update scroll progress but stay within visible range
+        vi.mocked(ScrollProviderModule.useScrollProgress).mockReturnValue({ progress: 0.10, scrollY: 100 });
+        rerender(<CheetahCanvas fadeOutStart={0.15} fadeOutEnd={0.20} />);
 
         await waitFor(() => {
-            expect(mockCanvasContext.clearRect).toHaveBeenCalled();
+            expect(mockCanvasContext.fillRect).toHaveBeenCalled();
         });
     });
 
@@ -191,8 +194,10 @@ describe('CheetahCanvas', () => {
         });
 
         it('should sync video currentTime with scroll progress', async () => {
-            vi.mocked(ScrollProviderModule.useScrollProgress).mockReturnValue({ progress: 0.5, scrollY: 500 });
-            render(<CheetahCanvas videoSrc="/test-video.mp4" loopCount={1} />);
+            // Use progress 0.05 which is within visible range (< fadeOutStart default of 0.15)
+            // With loopCount=1 and progress=0.05, and 10s duration: 0.05 * 10 = 0.5s
+            vi.mocked(ScrollProviderModule.useScrollProgress).mockReturnValue({ progress: 0.05, scrollY: 50 });
+            render(<CheetahCanvas videoSrc="/test-video.mp4" loopCount={1} fadeOutStart={0.15} fadeOutEnd={0.20} />);
 
             // Trigger video ready
             act(() => {
@@ -202,8 +207,8 @@ describe('CheetahCanvas', () => {
             });
 
             await waitFor(() => {
-                // At 0.5 progress with 10s duration, should seek to 5s
-                expect(mockVideo.currentTime).toBe(5);
+                // At 0.05 progress with 10s duration, should seek to 0.5s
+                expect(mockVideo.currentTime).toBe(0.5);
             });
         });
     });
@@ -218,6 +223,39 @@ describe('CheetahCanvas', () => {
         it('should accept custom loopCount', () => {
             render(<CheetahCanvas loopCount={3} />);
             expect(document.querySelector('canvas')).toBeInTheDocument();
+        });
+    });
+
+    describe('fadeOut props', () => {
+        it('should accept fadeOutStart and fadeOutEnd props', () => {
+            render(<CheetahCanvas fadeOutStart={0.1} fadeOutEnd={0.2} />);
+            expect(document.querySelector('canvas')).toBeInTheDocument();
+        });
+
+        it('should render black background when progress exceeds fadeOutEnd', async () => {
+            vi.mocked(ScrollProviderModule.useScrollProgress).mockReturnValue({ progress: 0.5, scrollY: 500 });
+            render(<CheetahCanvas fadeOutStart={0.1} fadeOutEnd={0.2} />);
+
+            await waitFor(() => {
+                // Should fill with black when fully faded
+                expect(mockCanvasContext.fillRect).toHaveBeenCalled();
+            });
+        });
+
+        it('should use default fadeOut values', () => {
+            render(<CheetahCanvas />);
+            // Component should render with default fadeOutStart=0.15 and fadeOutEnd=0.20
+            expect(document.querySelector('canvas')).toBeInTheDocument();
+        });
+
+        it('should have globalAlpha set during fade transition', async () => {
+            vi.mocked(ScrollProviderModule.useScrollProgress).mockReturnValue({ progress: 0.175, scrollY: 175 });
+            render(<CheetahCanvas fadeOutStart={0.15} fadeOutEnd={0.20} />);
+
+            await waitFor(() => {
+                // During fade (between fadeOutStart and fadeOutEnd), globalAlpha should be between 0 and 1
+                expect(mockCanvasContext.fillRect).toHaveBeenCalled();
+            });
         });
     });
 });

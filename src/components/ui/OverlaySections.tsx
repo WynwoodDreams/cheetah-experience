@@ -4,12 +4,13 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 const Section: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className = "" }) => (
-    <section className={`h-screen flex items-center justify-center p-8 ${className}`}>
+    <section className={`min-h-screen flex items-center justify-center p-8 ${className}`}>
         <motion.div
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ amount: 0.5, margin: "-100px" }}
             transition={{ duration: 0.8, ease: "easeOut" }}
+            className="w-full max-w-6xl"
         >
             {children}
         </motion.div>
@@ -39,27 +40,38 @@ export const OverlaySections = () => {
     return (
         <main className="relative z-10 w-full">
 
-            {/* Hero */}
-            <section className="h-screen flex flex-col items-center justify-center text-center">
+            {/* Hero - First viewport, text positioned at bottom-left to not overlap cheetah */}
+            <section className="h-screen flex flex-col items-start justify-end pb-20 px-8 md:px-16">
                 <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
+                    initial={{ opacity: 0, x: -50 }}
+                    animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 1.5 }}
+                    className="max-w-2xl"
                 >
-                    <h1 className="text-7xl md:text-9xl font-black tracking-tighter uppercase text-white drop-shadow-2xl">
-                        Acinonyx
+                    <h1 className="text-5xl md:text-7xl font-black tracking-tight text-white drop-shadow-2xl mb-4">
+                        Cheetah
+                        <span className="block text-cheetah-gold">Computing</span>
                     </h1>
-                    <p className="text-cheetah-gold tracking-[0.5em] mt-4 uppercase text-sm md:text-base font-bold">
-                        The Ultimate Sprinter
+                    <p className="text-gray-300 text-lg md:text-xl leading-relaxed mb-6">
+                        Lightning-fast infrastructure for the modern enterprise.
+                        Built for speed, designed for scale.
                     </p>
+                    <div className="flex gap-4">
+                        <button className="px-6 py-3 bg-cheetah-gold text-black font-semibold rounded-lg hover:bg-white transition-colors">
+                            Get Started
+                        </button>
+                        <button className="px-6 py-3 border border-white/30 text-white font-semibold rounded-lg hover:bg-white/10 transition-colors">
+                            Learn More
+                        </button>
+                    </div>
                 </motion.div>
                 <motion.div
-                    className="absolute bottom-10 animate-bounce"
+                    className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 1 }}
                 >
-                    <span className="text-white/50 text-xs tracking-widest">SCROLL TO HUNT</span>
+                    <span className="text-white/50 text-xs tracking-widest font-mono">SCROLL TO EXPLORE</span>
                 </motion.div>
             </section>
 
@@ -117,35 +129,221 @@ export const OverlaySections = () => {
                 </motion.div>
             </section>
 
-            {/* Anatomy Section */}
-            <Section className="items-end md:items-center">
-                <div className="md:w-1/2 md:ml-auto text-right">
-                    <h3 className="text-4xl text-cheetah-gold font-black mb-2 uppercase">Aerodynamic Frame</h3>
-                    <p className="text-gray-300 leading-relaxed">
-                        Semi-retractable claws act like sprinting spikes. An enlarged heart pumps oxygen rapidly to fuel the chase.
-                    </p>
-                </div>
-            </Section>
+            {/* Black background sections start here */}
+            <div className="bg-black">
 
-            {/* Habitat Section */}
-            <Section className="items-start md:items-center">
-                <div className="md:w-1/2 md:mr-auto text-left">
-                    <h3 className="text-4xl text-cheetah-gold font-black mb-2 uppercase">Savannah Ghost</h3>
-                    <p className="text-gray-300 leading-relaxed">
-                        Camouflaged against the tall grass, they stalk silently before unleashing their explosive power.
-                    </p>
-                </div>
-            </Section>
+                {/* Why Choose Cheetah - Features Grid (NOW FIRST) */}
+                <Section>
+                    <div className="text-center mb-12">
+                        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                            Why Choose Cheetah
+                        </h2>
+                        <p className="text-gray-400 max-w-2xl mx-auto">
+                            Enterprise-grade solutions built for developers
+                        </p>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <FeatureCard
+                            icon="⚡"
+                            title="Instant Deployment"
+                            description="Deploy your applications in seconds with our streamlined CI/CD pipeline integration and one-click deployment options."
+                        />
+                        <FeatureCard
+                            icon="🔒"
+                            title="Enterprise Security"
+                            description="SOC 2 Type II certified with end-to-end encryption, DDoS protection, and comprehensive audit logging."
+                        />
+                        <FeatureCard
+                            icon="📊"
+                            title="Real-time Analytics"
+                            description="Monitor performance, track usage, and gain insights with our comprehensive observability platform."
+                        />
+                        <FeatureCard
+                            icon="🌐"
+                            title="Global CDN"
+                            description="Content delivery optimized across 200+ edge locations for sub-millisecond response times."
+                        />
+                        <FeatureCard
+                            icon="🔄"
+                            title="Auto-scaling"
+                            description="Automatically scale resources based on demand. Pay only for what you use with granular billing."
+                        />
+                        <FeatureCard
+                            icon="🛠️"
+                            title="Developer Tools"
+                            description="REST APIs, SDKs for all major languages, CLI tools, and comprehensive documentation."
+                        />
+                    </div>
+                </Section>
 
-            {/* Footer */}
-            <section className="h-[50vh] flex items-center justify-center bg-black/80 backdrop-blur-sm">
-                <div className="text-center">
-                    <h2 className="text-2xl text-white font-bold mb-4">Protect the Speed</h2>
-                    <button className="px-8 py-3 bg-cheetah-gold text-black font-bold uppercase tracking-wider rounded-full hover:bg-white transition-colors">
-                        Learn Conservation
-                    </button>
-                </div>
-            </section>
+                {/* Performance Metrics (NOW SECOND) */}
+                <Section>
+                    <div className="text-center mb-12">
+                        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                            Performance Metrics
+                        </h2>
+                        <p className="text-gray-400 max-w-2xl mx-auto">
+                            Real-time data from our global infrastructure network
+                        </p>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <StatCard
+                            value="99.99%"
+                            label="Uptime SLA"
+                            description="Industry-leading reliability with redundant systems across all regions"
+                        />
+                        <StatCard
+                            value="<10ms"
+                            label="Global Latency"
+                            description="Edge computing nodes in 50+ locations worldwide"
+                        />
+                        <StatCard
+                            value="10 TB/s"
+                            label="Bandwidth"
+                            description="Massive throughput capacity for your most demanding workloads"
+                        />
+                        <StatCard
+                            value="2M+"
+                            label="API Requests/sec"
+                            description="Handle any scale with our auto-scaling infrastructure"
+                        />
+                    </div>
+                </Section>
+
+                {/* Pricing Section */}
+                <Section>
+                    <div className="text-center mb-12">
+                        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                            Simple, Transparent Pricing
+                        </h2>
+                        <p className="text-gray-400 max-w-2xl mx-auto">
+                            Start free, scale as you grow
+                        </p>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+                        <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8">
+                            <div className="text-lg font-semibold text-gray-400 mb-2">Starter</div>
+                            <div className="text-4xl font-bold text-white mb-4">$0<span className="text-lg text-gray-400">/mo</span></div>
+                            <ul className="space-y-3 mb-8 text-gray-300">
+                                <li>✓ 100GB bandwidth</li>
+                                <li>✓ 1M API requests</li>
+                                <li>✓ Community support</li>
+                                <li>✓ Basic analytics</li>
+                            </ul>
+                            <button className="w-full py-3 border border-white/30 text-white rounded-lg hover:bg-white/10 transition-colors">
+                                Get Started
+                            </button>
+                        </div>
+                        <div className="bg-cheetah-gold/10 backdrop-blur-sm border-2 border-cheetah-gold rounded-2xl p-8 relative">
+                            <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-cheetah-gold text-black text-xs font-bold px-3 py-1 rounded-full">
+                                POPULAR
+                            </div>
+                            <div className="text-lg font-semibold text-cheetah-gold mb-2">Pro</div>
+                            <div className="text-4xl font-bold text-white mb-4">$99<span className="text-lg text-gray-400">/mo</span></div>
+                            <ul className="space-y-3 mb-8 text-gray-300">
+                                <li>✓ 1TB bandwidth</li>
+                                <li>✓ 10M API requests</li>
+                                <li>✓ Priority support</li>
+                                <li>✓ Advanced analytics</li>
+                                <li>✓ Custom domains</li>
+                            </ul>
+                            <button className="w-full py-3 bg-cheetah-gold text-black font-semibold rounded-lg hover:bg-white transition-colors">
+                                Start Free Trial
+                            </button>
+                        </div>
+                        <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8">
+                            <div className="text-lg font-semibold text-gray-400 mb-2">Enterprise</div>
+                            <div className="text-4xl font-bold text-white mb-4">Custom</div>
+                            <ul className="space-y-3 mb-8 text-gray-300">
+                                <li>✓ Unlimited bandwidth</li>
+                                <li>✓ Unlimited requests</li>
+                                <li>✓ Dedicated support</li>
+                                <li>✓ SLA guarantee</li>
+                                <li>✓ Custom integrations</li>
+                            </ul>
+                            <button className="w-full py-3 border border-white/30 text-white rounded-lg hover:bg-white/10 transition-colors">
+                                Contact Sales
+                            </button>
+                        </div>
+                    </div>
+                </Section>
+
+                {/* CTA Footer */}
+                <section className="min-h-[50vh] flex items-center justify-center px-8">
+                    <div className="text-center max-w-2xl">
+                        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                            Ready to Move Fast?
+                        </h2>
+                        <p className="text-gray-400 mb-8">
+                            Join thousands of companies using Cheetah Computing to power their applications.
+                        </p>
+                        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                            <button className="px-8 py-4 bg-cheetah-gold text-black font-bold uppercase tracking-wider rounded-lg hover:bg-white transition-colors">
+                                Start Free Trial
+                            </button>
+                            <button className="px-8 py-4 border border-white/30 text-white font-semibold rounded-lg hover:bg-white/10 transition-colors">
+                                Schedule Demo
+                            </button>
+                        </div>
+                        <p className="text-gray-500 text-sm mt-8">
+                            No credit card required • Free tier available • Cancel anytime
+                        </p>
+                    </div>
+                </section>
+
+                {/* Footer */}
+                <footer className="border-t border-white/10 py-12 px-8">
+                    <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
+                        <div>
+                            <h4 className="text-white font-semibold mb-4">Product</h4>
+                            <ul className="space-y-2 text-gray-400 text-sm">
+                                <li><a href="#" className="hover:text-white transition-colors">Features</a></li>
+                                <li><a href="#" className="hover:text-white transition-colors">Pricing</a></li>
+                                <li><a href="#" className="hover:text-white transition-colors">Documentation</a></li>
+                                <li><a href="#" className="hover:text-white transition-colors">API Reference</a></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 className="text-white font-semibold mb-4">Company</h4>
+                            <ul className="space-y-2 text-gray-400 text-sm">
+                                <li><a href="#" className="hover:text-white transition-colors">About</a></li>
+                                <li><a href="#" className="hover:text-white transition-colors">Blog</a></li>
+                                <li><a href="#" className="hover:text-white transition-colors">Careers</a></li>
+                                <li><a href="#" className="hover:text-white transition-colors">Press</a></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 className="text-white font-semibold mb-4">Resources</h4>
+                            <ul className="space-y-2 text-gray-400 text-sm">
+                                <li><a href="#" className="hover:text-white transition-colors">Community</a></li>
+                                <li><a href="#" className="hover:text-white transition-colors">Support</a></li>
+                                <li><a href="#" className="hover:text-white transition-colors">Status</a></li>
+                                <li><a href="#" className="hover:text-white transition-colors">Security</a></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 className="text-white font-semibold mb-4">Legal</h4>
+                            <ul className="space-y-2 text-gray-400 text-sm">
+                                <li><a href="#" className="hover:text-white transition-colors">Privacy</a></li>
+                                <li><a href="#" className="hover:text-white transition-colors">Terms</a></li>
+                                <li><a href="#" className="hover:text-white transition-colors">Cookies</a></li>
+                                <li><a href="#" className="hover:text-white transition-colors">Licenses</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div className="max-w-6xl mx-auto mt-12 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
+                        <div className="text-gray-400 text-sm">
+                            © 2026 Cheetah Computing. All rights reserved.
+                        </div>
+                        <div className="flex gap-6 text-gray-400">
+                            <a href="#" className="hover:text-white transition-colors">Twitter</a>
+                            <a href="#" className="hover:text-white transition-colors">GitHub</a>
+                            <a href="#" className="hover:text-white transition-colors">LinkedIn</a>
+                        </div>
+                    </div>
+                </footer>
+
+            </div>
 
         </main>
     );

@@ -23,67 +23,141 @@ describe('OverlaySections', () => {
     });
 
     describe('Hero Section', () => {
-        it('should render the main title "Acinonyx"', () => {
+        it('should render the company name "Cheetah Computing"', () => {
             render(<OverlaySections />);
-            expect(screen.getByText('Acinonyx')).toBeInTheDocument();
+            expect(screen.getByText('Cheetah')).toBeInTheDocument();
+            expect(screen.getByText('Computing')).toBeInTheDocument();
         });
 
-        it('should render the subtitle', () => {
+        it('should render the tagline', () => {
             render(<OverlaySections />);
-            expect(screen.getByText('The Ultimate Sprinter')).toBeInTheDocument();
+            expect(screen.getByText(/lightning-fast infrastructure/i)).toBeInTheDocument();
         });
 
         it('should display scroll instruction', () => {
             render(<OverlaySections />);
-            expect(screen.getByText('SCROLL TO HUNT')).toBeInTheDocument();
+            expect(screen.getByText('SCROLL TO EXPLORE')).toBeInTheDocument();
+        });
+
+        it('should have Get Started and Learn More buttons', () => {
+            render(<OverlaySections />);
+            // Multiple "Get Started" buttons exist, so use getAllByRole
+            const getStartedButtons = screen.getAllByRole('button', { name: /get started/i });
+            expect(getStartedButtons.length).toBeGreaterThan(0);
+            expect(screen.getByRole('button', { name: /learn more/i })).toBeInTheDocument();
         });
     });
 
     describe('Speed Section', () => {
-        it('should display speed statistic', () => {
+        it('should display speed messaging', () => {
             render(<OverlaySections />);
-            expect(screen.getByText('70 MPH')).toBeInTheDocument();
-        });
-
-        it('should include speed description', () => {
-            render(<OverlaySections />);
-            expect(screen.getByText(/accelerating from 0 to 60 mph/i)).toBeInTheDocument();
+            expect(screen.getByText(/speed that/i)).toBeInTheDocument();
         });
     });
 
-    describe('Anatomy Section', () => {
-        it('should display anatomy heading', () => {
+    describe('Performance Metrics Section', () => {
+        it('should display uptime statistic', () => {
             render(<OverlaySections />);
-            expect(screen.getByText('Aerodynamic Frame')).toBeInTheDocument();
+            expect(screen.getByText('99.99%')).toBeInTheDocument();
+            expect(screen.getByText('Uptime SLA')).toBeInTheDocument();
         });
 
-        it('should include anatomy description', () => {
+        it('should display latency statistic', () => {
             render(<OverlaySections />);
-            expect(screen.getByText(/semi-retractable claws/i)).toBeInTheDocument();
+            expect(screen.getByText('<10ms')).toBeInTheDocument();
+            expect(screen.getByText('Global Latency')).toBeInTheDocument();
+        });
+
+        it('should display bandwidth statistic', () => {
+            render(<OverlaySections />);
+            expect(screen.getByText('10 TB/s')).toBeInTheDocument();
+            expect(screen.getByText('Bandwidth')).toBeInTheDocument();
+        });
+
+        it('should display API requests statistic', () => {
+            render(<OverlaySections />);
+            expect(screen.getByText('2M+')).toBeInTheDocument();
+            expect(screen.getByText('API Requests/sec')).toBeInTheDocument();
         });
     });
 
-    describe('Habitat Section', () => {
-        it('should display habitat heading', () => {
+    describe('Features Section', () => {
+        it('should display Why Choose Cheetah heading', () => {
             render(<OverlaySections />);
-            expect(screen.getByText('Savannah Ghost')).toBeInTheDocument();
+            expect(screen.getByText('Why Choose Cheetah')).toBeInTheDocument();
         });
 
-        it('should include habitat description', () => {
+        it('should display feature cards', () => {
             render(<OverlaySections />);
-            expect(screen.getByText(/camouflaged against the tall grass/i)).toBeInTheDocument();
+            expect(screen.getByText('Instant Deployment')).toBeInTheDocument();
+            expect(screen.getByText('Enterprise Security')).toBeInTheDocument();
+            expect(screen.getByText('Real-time Analytics')).toBeInTheDocument();
+            expect(screen.getByText('Global CDN')).toBeInTheDocument();
+            expect(screen.getByText('Auto-scaling')).toBeInTheDocument();
+            expect(screen.getByText('Developer Tools')).toBeInTheDocument();
         });
     });
 
-    describe('Footer Section', () => {
-        it('should display conservation message', () => {
+    describe('Pricing Section', () => {
+        it('should display pricing heading', () => {
             render(<OverlaySections />);
-            expect(screen.getByText('Protect the Speed')).toBeInTheDocument();
+            expect(screen.getByText('Simple, Transparent Pricing')).toBeInTheDocument();
         });
 
-        it('should have a conservation button', () => {
+        it('should display pricing tiers', () => {
             render(<OverlaySections />);
-            expect(screen.getByRole('button', { name: /learn conservation/i })).toBeInTheDocument();
+            expect(screen.getByText('Starter')).toBeInTheDocument();
+            expect(screen.getByText('Pro')).toBeInTheDocument();
+            expect(screen.getByText('Enterprise')).toBeInTheDocument();
+        });
+
+        it('should have pricing values', () => {
+            render(<OverlaySections />);
+            expect(screen.getByText(/\$0/)).toBeInTheDocument();
+            expect(screen.getByText(/\$99/)).toBeInTheDocument();
+            expect(screen.getByText('Custom')).toBeInTheDocument();
+        });
+
+        it('should have popular badge on Pro tier', () => {
+            render(<OverlaySections />);
+            expect(screen.getByText('POPULAR')).toBeInTheDocument();
+        });
+    });
+
+    describe('CTA Section', () => {
+        it('should display call to action', () => {
+            render(<OverlaySections />);
+            expect(screen.getByText('Ready to Move Fast?')).toBeInTheDocument();
+        });
+
+        it('should have trial and demo buttons', () => {
+            render(<OverlaySections />);
+            // Multiple "Start Free Trial" buttons exist, so use getAllByRole
+            const trialButtons = screen.getAllByRole('button', { name: /start free trial/i });
+            expect(trialButtons.length).toBeGreaterThan(0);
+            expect(screen.getByRole('button', { name: /schedule demo/i })).toBeInTheDocument();
+        });
+    });
+
+    describe('Footer', () => {
+        it('should have footer navigation sections', () => {
+            render(<OverlaySections />);
+            expect(screen.getByText('Product')).toBeInTheDocument();
+            expect(screen.getByText('Company')).toBeInTheDocument();
+            expect(screen.getByText('Resources')).toBeInTheDocument();
+            expect(screen.getByText('Legal')).toBeInTheDocument();
+        });
+
+        it('should have copyright notice', () => {
+            render(<OverlaySections />);
+            expect(screen.getByText(/© 2026 Cheetah Computing/)).toBeInTheDocument();
+        });
+
+        it('should have social links', () => {
+            render(<OverlaySections />);
+            expect(screen.getByText('Twitter')).toBeInTheDocument();
+            expect(screen.getByText('GitHub')).toBeInTheDocument();
+            expect(screen.getByText('LinkedIn')).toBeInTheDocument();
         });
     });
 
@@ -106,27 +180,24 @@ describe('OverlaySections', () => {
             expect(main).toHaveClass('w-full');
         });
 
-        it('should have sections with full viewport height', () => {
+        it('should have black background section wrapper', () => {
             render(<OverlaySections />);
-            const sections = document.querySelectorAll('section');
-            const fullHeightSections = Array.from(sections).filter(
-                section => section.classList.contains('h-screen') || section.classList.contains('h-[50vh]')
-            );
-            expect(fullHeightSections.length).toBeGreaterThanOrEqual(4);
+            const blackBgSection = document.querySelector('.bg-black');
+            expect(blackBgSection).toBeInTheDocument();
         });
     });
 
     describe('Styling', () => {
-        it('should have gold colored headings', () => {
+        it('should have gold colored elements', () => {
             render(<OverlaySections />);
-            const goldHeadings = document.querySelectorAll('.text-cheetah-gold');
-            expect(goldHeadings.length).toBeGreaterThan(0);
+            const goldElements = document.querySelectorAll('.text-cheetah-gold');
+            expect(goldElements.length).toBeGreaterThan(0);
         });
 
         it('should have white title text', () => {
             render(<OverlaySections />);
-            const title = screen.getByText('Acinonyx');
-            expect(title).toHaveClass('text-white');
+            const title = screen.getByText('Cheetah');
+            expect(title.closest('h1')).toHaveClass('text-white');
         });
     });
 });
