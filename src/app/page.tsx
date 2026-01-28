@@ -16,6 +16,9 @@ export default function Home() {
           fadeOutEnd={0.22}
         />
 
+        {/* Paw prints background overlay */}
+        <div className="paw-prints-scattered" aria-hidden="true" />
+
         {/* Foreground Content Layer */}
         <OverlaySections />
 
