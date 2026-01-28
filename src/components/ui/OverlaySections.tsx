@@ -148,7 +148,7 @@ export const OverlaySections = () => {
             </section>
 
             {/* Black background sections start here */}
-            <div className="bg-black">
+            <div className="bg-black cheetah-spots">
 
                 {/* Why Choose Cheetah - Features Grid (NOW FIRST) */}
                 <Section>
