@@ -6,10 +6,15 @@ import { IntroOverlay } from "@/components/ui/IntroOverlay";
 export default function Home() {
   return (
     <ScrollProvider>
-      <div className="relative min-h-[1000vh] bg-midnight-blue">
+      <div className="relative bg-midnight-blue">
         {/* Background Canvas Layer */}
-        {/* We pass a video source, but if it's missing, it will fallback to placeholder animation */}
-        <CheetahCanvas videoSrc="/sequence/cheetah_run.mp4" loopCount={5} />
+        {/* Video fades to black after ~2 screen scrolls */}
+        <CheetahCanvas
+          videoSrc="/sequence/cheetah_run.mp4"
+          loopCount={2}
+          fadeOutStart={0.08}
+          fadeOutEnd={0.12}
+        />
 
         {/* Foreground Content Layer */}
         <OverlaySections />

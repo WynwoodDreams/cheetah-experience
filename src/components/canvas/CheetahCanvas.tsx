@@ -8,14 +8,28 @@ interface CheetahCanvasProps {
     videoSrc?: string;
     frameCount?: number; // If using image sequence (future proofing)
     loopCount?: number;
+    fadeOutStart?: number; // Progress value (0-1) when fade begins
+    fadeOutEnd?: number;   // Progress value (0-1) when fully faded to black
 }
 
-export const CheetahCanvas: React.FC<CheetahCanvasProps> = ({ videoSrc, loopCount = 1 }) => {
+export const CheetahCanvas: React.FC<CheetahCanvasProps> = ({
+    videoSrc,
+    loopCount = 1,
+    fadeOutStart = 0.15,  // Start fading at 15% scroll (after ~1.5 screens)
+    fadeOutEnd = 0.20     // Fully black at 20% scroll (after 2 screens)
+}) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const videoRef = useRef<HTMLVideoElement | null>(null);
     const { progress } = useScrollProgress();
     const [isVideoReady, setIsVideoReady] = useState(false);
     const requestRef = useRef<number | null>(null);
+
+    // Calculate opacity based on progress (1 = visible, 0 = black)
+    const getVideoOpacity = (prog: number): number => {
+        if (prog <= fadeOutStart) return 1;
+        if (prog >= fadeOutEnd) return 0;
+        return 1 - (prog - fadeOutStart) / (fadeOutEnd - fadeOutStart);
+    };
 
     // Initialize Video
     useEffect(() => {
@@ -50,8 +64,17 @@ export const CheetahCanvas: React.FC<CheetahCanvasProps> = ({ videoSrc, loopCoun
 
         if (!canvas || !ctx) return;
 
-        // Clear
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const opacity = getVideoOpacity(progress);
+
+        // Always fill with black first (this becomes the background when video fades)
+        ctx.fillStyle = '#000000';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // If fully faded out, no need to draw video
+        if (opacity <= 0) return;
+
+        // Set global alpha for fade effect
+        ctx.globalAlpha = opacity;
 
         if (isVideoReady && videoRef.current) {
             // Video Logic
@@ -72,9 +95,8 @@ export const CheetahCanvas: React.FC<CheetahCanvasProps> = ({ videoSrc, loopCoun
             renderPlaceholder(ctx, canvas.width, canvas.height, progress);
         }
 
-        // We don't necessarily need a loop running *always* if we only update on scroll,
-        // but running a loop allows for smoother play/interpolation if we add it later.
-        // For now, let's trigger draw on progress change + initial.
+        // Reset global alpha
+        ctx.globalAlpha = 1;
     };
 
     // Helper: Contain/Cover logic for Canvas
