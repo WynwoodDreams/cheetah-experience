@@ -36,6 +36,24 @@ const RunningCheetah = () => (
     </svg>
 );
 
+// Feature card component for the features grid
+const FeatureCard: React.FC<{ icon: string; title: string; description: string }> = ({ icon, title, description }) => (
+    <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-colors">
+        <div className="text-3xl mb-4">{icon}</div>
+        <h3 className="text-xl font-semibold text-white mb-2">{title}</h3>
+        <p className="text-gray-400 text-sm leading-relaxed">{description}</p>
+    </div>
+);
+
+// Stat card component for the metrics section
+const StatCard: React.FC<{ value: string; label: string; description: string }> = ({ value, label, description }) => (
+    <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 text-center">
+        <div className="text-4xl md:text-5xl font-bold text-cheetah-gold mb-2">{value}</div>
+        <div className="text-white font-semibold mb-2">{label}</div>
+        <p className="text-gray-400 text-sm">{description}</p>
+    </div>
+);
+
 export const OverlaySections = () => {
     return (
         <main className="relative z-10 w-full">
