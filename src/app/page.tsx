@@ -8,12 +8,12 @@ export default function Home() {
     <ScrollProvider>
       <div className="relative bg-midnight-blue">
         {/* Background Canvas Layer */}
-        {/* Video fades to black after ~2 screen scrolls */}
+        {/* Video fades to black after Speed Matters section (~3 screens) */}
         <CheetahCanvas
           videoSrc="/sequence/cheetah_run.mp4"
           loopCount={2}
-          fadeOutStart={0.08}
-          fadeOutEnd={0.12}
+          fadeOutStart={0.18}
+          fadeOutEnd={0.22}
         />
 
         {/* Foreground Content Layer */}

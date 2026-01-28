@@ -37,7 +37,7 @@ export const OverlaySections = () => {
     return (
         <main className="relative z-10 w-full">
 
-            {/* Hero - First viewport, text positioned to not overlap cheetah */}
+            {/* Hero - First viewport, text positioned at bottom-left to not overlap cheetah */}
             <section className="h-screen flex flex-col items-start justify-end pb-20 px-8 md:px-16">
                 <motion.div
                     initial={{ opacity: 0, x: -50 }}
@@ -72,19 +72,19 @@ export const OverlaySections = () => {
                 </motion.div>
             </section>
 
-            {/* Speed Stats Section - Second viewport */}
-            <section className="h-screen flex items-end justify-center pb-20 px-8">
+            {/* Speed Stats Section - Second viewport, text at bottom to show cheetah */}
+            <section className="h-screen flex items-end justify-start pb-20 px-8 md:px-16">
                 <motion.div
                     initial={{ opacity: 0, y: 50 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ amount: 0.3 }}
                     transition={{ duration: 0.8 }}
-                    className="max-w-4xl text-center"
+                    className="max-w-xl"
                 >
-                    <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">
+                    <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 drop-shadow-lg">
                         Speed That <span className="text-cheetah-gold">Matters</span>
                     </h2>
-                    <p className="text-gray-400 text-lg mb-8 max-w-2xl mx-auto">
+                    <p className="text-gray-300 text-lg drop-shadow-md">
                         Just like the fastest land animal, our infrastructure is optimized for peak performance.
                     </p>
                 </motion.div>
@@ -93,41 +93,7 @@ export const OverlaySections = () => {
             {/* Black background sections start here */}
             <div className="bg-black">
 
-                {/* Performance Metrics */}
-                <Section>
-                    <div className="text-center mb-12">
-                        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-                            Performance Metrics
-                        </h2>
-                        <p className="text-gray-400 max-w-2xl mx-auto">
-                            Real-time data from our global infrastructure network
-                        </p>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <StatCard
-                            value="99.99%"
-                            label="Uptime SLA"
-                            description="Industry-leading reliability with redundant systems across all regions"
-                        />
-                        <StatCard
-                            value="<10ms"
-                            label="Global Latency"
-                            description="Edge computing nodes in 50+ locations worldwide"
-                        />
-                        <StatCard
-                            value="10 TB/s"
-                            label="Bandwidth"
-                            description="Massive throughput capacity for your most demanding workloads"
-                        />
-                        <StatCard
-                            value="2M+"
-                            label="API Requests/sec"
-                            description="Handle any scale with our auto-scaling infrastructure"
-                        />
-                    </div>
-                </Section>
-
-                {/* Features Grid */}
+                {/* Why Choose Cheetah - Features Grid (NOW FIRST) */}
                 <Section>
                     <div className="text-center mb-12">
                         <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
@@ -167,6 +133,40 @@ export const OverlaySections = () => {
                             icon="🛠️"
                             title="Developer Tools"
                             description="REST APIs, SDKs for all major languages, CLI tools, and comprehensive documentation."
+                        />
+                    </div>
+                </Section>
+
+                {/* Performance Metrics (NOW SECOND) */}
+                <Section>
+                    <div className="text-center mb-12">
+                        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                            Performance Metrics
+                        </h2>
+                        <p className="text-gray-400 max-w-2xl mx-auto">
+                            Real-time data from our global infrastructure network
+                        </p>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <StatCard
+                            value="99.99%"
+                            label="Uptime SLA"
+                            description="Industry-leading reliability with redundant systems across all regions"
+                        />
+                        <StatCard
+                            value="<10ms"
+                            label="Global Latency"
+                            description="Edge computing nodes in 50+ locations worldwide"
+                        />
+                        <StatCard
+                            value="10 TB/s"
+                            label="Bandwidth"
+                            description="Massive throughput capacity for your most demanding workloads"
+                        />
+                        <StatCard
+                            value="2M+"
+                            label="API Requests/sec"
+                            description="Handle any scale with our auto-scaling infrastructure"
                         />
                     </div>
                 </Section>
@@ -225,45 +225,6 @@ export const OverlaySections = () => {
                             <button className="w-full py-3 border border-white/30 text-white rounded-lg hover:bg-white/10 transition-colors">
                                 Contact Sales
                             </button>
-                        </div>
-                    </div>
-                </Section>
-
-                {/* Testimonials */}
-                <Section>
-                    <div className="text-center mb-12">
-                        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-                            Trusted by Industry Leaders
-                        </h2>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-                        <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8">
-                            <p className="text-gray-300 italic mb-6">
-                                "Cheetah Computing reduced our deployment time by 80% and our infrastructure costs by 40%. The performance gains were immediate."
-                            </p>
-                            <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 bg-cheetah-gold/20 rounded-full flex items-center justify-center text-cheetah-gold font-bold">
-                                    JD
-                                </div>
-                                <div>
-                                    <div className="text-white font-semibold">Jane Doe</div>
-                                    <div className="text-gray-400 text-sm">CTO, TechCorp Inc.</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8">
-                            <p className="text-gray-300 italic mb-6">
-                                "The auto-scaling capabilities handled our Black Friday traffic spike without a single hiccup. We processed 10x normal volume seamlessly."
-                            </p>
-                            <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 bg-cheetah-gold/20 rounded-full flex items-center justify-center text-cheetah-gold font-bold">
-                                    MS
-                                </div>
-                                <div>
-                                    <div className="text-white font-semibold">Mike Smith</div>
-                                    <div className="text-gray-400 text-sm">VP Engineering, E-Shop</div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </Section>

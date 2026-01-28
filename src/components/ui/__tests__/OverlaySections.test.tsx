@@ -124,25 +124,6 @@ describe('OverlaySections', () => {
         });
     });
 
-    describe('Testimonials Section', () => {
-        it('should display testimonials heading', () => {
-            render(<OverlaySections />);
-            expect(screen.getByText('Trusted by Industry Leaders')).toBeInTheDocument();
-        });
-
-        it('should display testimonial quotes', () => {
-            render(<OverlaySections />);
-            expect(screen.getByText(/reduced our deployment time by 80%/i)).toBeInTheDocument();
-            expect(screen.getByText(/auto-scaling capabilities/i)).toBeInTheDocument();
-        });
-
-        it('should display testimonial authors', () => {
-            render(<OverlaySections />);
-            expect(screen.getByText('Jane Doe')).toBeInTheDocument();
-            expect(screen.getByText('Mike Smith')).toBeInTheDocument();
-        });
-    });
-
     describe('CTA Section', () => {
         it('should display call to action', () => {
             render(<OverlaySections />);
