@@ -1,9 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { IntroOverlay } from '../IntroOverlay';
 
-// Mock framer-motion to avoid animation timing issues in tests
 vi.mock('framer-motion', async () => {
     const actual = await vi.importActual('framer-motion');
     return {
@@ -13,14 +12,16 @@ vi.mock('framer-motion', async () => {
             div: ({ children, exit, initial, animate, whileInView, ...props }: React.ComponentProps<'div'> & Record<string, unknown>) => (
                 <div {...props}>{children}</div>
             ),
+            span: ({ children, ...props }: React.ComponentProps<'span'> & Record<string, unknown>) => {
+                const { animate: _a, transition: _t, ...rest } = props;
+                return <span {...rest}>{children}</span>;
+            },
         },
     };
 });
 
 describe('IntroOverlay', () => {
-    beforeEach(() => {
-        vi.clearAllMocks();
-    });
+    beforeEach(() => { vi.clearAllMocks(); });
 
     it('should render the intro overlay initially', () => {
         render(<IntroOverlay />);
@@ -40,7 +41,6 @@ describe('IntroOverlay', () => {
         expect(video).toHaveAttribute('src', '/sequence/cheetah_run.mp4');
         expect(video).toHaveAttribute('autoplay');
         expect(video).toHaveAttribute('loop');
-        // In React, the muted property is set directly on the element, not as an attribute
         expect(video.muted).toBe(true);
     });
 
@@ -51,7 +51,6 @@ describe('IntroOverlay', () => {
         const button = screen.getByRole('button', { name: /enter experience/i });
         await user.click(button);
 
-        // After clicking, the overlay should be hidden (isVisible = false)
         await waitFor(() => {
             expect(screen.queryByText('Hunt')).not.toBeInTheDocument();
         });
@@ -76,10 +75,10 @@ describe('IntroOverlay', () => {
             expect(overlay).toHaveClass('inset-0');
         });
 
-        it('should have black background', () => {
+        it('should have black curtain panels', () => {
             render(<IntroOverlay />);
-            const overlay = screen.getByText('Hunt').closest('[class*="bg-black"]');
-            expect(overlay).toBeInTheDocument();
+            const blackPanels = document.querySelectorAll('.bg-black');
+            expect(blackPanels.length).toBeGreaterThanOrEqual(2);
         });
 
         it('should have grayscale filter on video', () => {
@@ -93,7 +92,7 @@ describe('IntroOverlay', () => {
         it('should have hover styles on the button', () => {
             render(<IntroOverlay />);
             const button = screen.getByRole('button', { name: /enter experience/i });
-            expect(button).toHaveClass('hover:border-cheetah-gold');
+            expect(button).toHaveClass('hover:border-cheetah-gold/60');
         });
 
         it('should be focusable', () => {

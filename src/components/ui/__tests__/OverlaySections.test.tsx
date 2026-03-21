@@ -2,7 +2,6 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { OverlaySections } from '../OverlaySections';
 
-// Mock framer-motion to avoid animation timing issues in tests
 vi.mock('framer-motion', async () => {
     const actual = await vi.importActual('framer-motion');
     return {
@@ -11,6 +10,10 @@ vi.mock('framer-motion', async () => {
             div: ({ children, initial, animate, whileInView, exit, transition, viewport, ...props }: React.ComponentProps<'div'> & Record<string, unknown>) => (
                 <div {...props}>{children}</div>
             ),
+            span: ({ children, ...props }: React.ComponentProps<'span'> & Record<string, unknown>) => {
+                const { animate: _a, transition: _t, ...rest } = props;
+                return <span {...rest}>{children}</span>;
+            },
         },
     };
 });
@@ -18,123 +21,119 @@ vi.mock('framer-motion', async () => {
 describe('OverlaySections', () => {
     it('should render the main element', () => {
         render(<OverlaySections />);
-        const main = document.querySelector('main');
-        expect(main).toBeInTheDocument();
+        expect(document.querySelector('main')).toBeInTheDocument();
     });
 
     describe('Hero Section', () => {
-        it('should render the company name "Cheetah Computing"', () => {
+        it('should render cybersecurity heading', () => {
             render(<OverlaySections />);
-            expect(screen.getByText('Cheetah')).toBeInTheDocument();
-            expect(screen.getByText('Computing')).toBeInTheDocument();
+            expect(screen.getByText('Threat Response')).toBeInTheDocument();
+            expect(screen.getByText('at Cheetah Speed')).toBeInTheDocument();
         });
 
         it('should render the tagline', () => {
             render(<OverlaySections />);
-            expect(screen.getByText(/lightning-fast infrastructure/i)).toBeInTheDocument();
+            expect(screen.getByText(/AI-powered security operations/i)).toBeInTheDocument();
         });
 
         it('should display scroll instruction', () => {
             render(<OverlaySections />);
-            expect(screen.getByText('SCROLL TO EXPLORE')).toBeInTheDocument();
+            expect(screen.getByText('SCROLL')).toBeInTheDocument();
         });
 
-        it('should have Get Started and Learn More buttons', () => {
+        it('should have CTA links', () => {
             render(<OverlaySections />);
-            // Multiple "Get Started" buttons exist, so use getAllByRole
-            const getStartedButtons = screen.getAllByRole('button', { name: /get started/i });
-            expect(getStartedButtons.length).toBeGreaterThan(0);
-            expect(screen.getByRole('button', { name: /learn more/i })).toBeInTheDocument();
+            expect(screen.getByText('Start Free Audit')).toBeInTheDocument();
+            expect(screen.getByText('See How It Works')).toBeInTheDocument();
         });
     });
 
     describe('Speed Section', () => {
-        it('should display speed messaging', () => {
+        it('should display detection speed messaging', () => {
             render(<OverlaySections />);
-            expect(screen.getByText(/speed that/i)).toBeInTheDocument();
+            expect(screen.getAllByText('Mean Time to Detect').length).toBeGreaterThan(0);
         });
     });
 
-    describe('Performance Metrics Section', () => {
-        it('should display uptime statistic', () => {
+    describe('Security Metrics Section', () => {
+        it('should display threat detection rate', () => {
             render(<OverlaySections />);
-            expect(screen.getByText('99.99%')).toBeInTheDocument();
-            expect(screen.getByText('Uptime SLA')).toBeInTheDocument();
+            expect(screen.getByText('99.97%')).toBeInTheDocument();
+            expect(screen.getByText('Threat Detection Rate')).toBeInTheDocument();
         });
 
-        it('should display latency statistic', () => {
+        it('should display MTTD stat card', () => {
             render(<OverlaySections />);
-            expect(screen.getByText('<10ms')).toBeInTheDocument();
-            expect(screen.getByText('Global Latency')).toBeInTheDocument();
+            expect(screen.getAllByText('<200ms').length).toBeGreaterThan(0);
+            expect(screen.getAllByText('Mean Time to Detect').length).toBeGreaterThan(0);
         });
 
-        it('should display bandwidth statistic', () => {
+        it('should display events analyzed', () => {
             render(<OverlaySections />);
-            expect(screen.getByText('10 TB/s')).toBeInTheDocument();
-            expect(screen.getByText('Bandwidth')).toBeInTheDocument();
+            expect(screen.getByText('4.2B+')).toBeInTheDocument();
+            expect(screen.getByText('Events Analyzed Daily')).toBeInTheDocument();
         });
 
-        it('should display API requests statistic', () => {
+        it('should display breaches stat', () => {
             render(<OverlaySections />);
-            expect(screen.getByText('2M+')).toBeInTheDocument();
-            expect(screen.getByText('API Requests/sec')).toBeInTheDocument();
+            expect(screen.getByText('0')).toBeInTheDocument();
+            expect(screen.getByText('Breaches on Our Watch')).toBeInTheDocument();
         });
     });
 
-    describe('Features Section', () => {
-        it('should display Why Choose Cheetah heading', () => {
+    describe('Solutions Section', () => {
+        it('should display Protection heading', () => {
             render(<OverlaySections />);
-            expect(screen.getByText('Why Choose Cheetah')).toBeInTheDocument();
+            expect(screen.getByText('Protection at Every Layer')).toBeInTheDocument();
         });
 
-        it('should display feature cards', () => {
+        it('should display security feature cards', () => {
             render(<OverlaySections />);
-            expect(screen.getByText('Instant Deployment')).toBeInTheDocument();
-            expect(screen.getByText('Enterprise Security')).toBeInTheDocument();
-            expect(screen.getByText('Real-time Analytics')).toBeInTheDocument();
-            expect(screen.getByText('Global CDN')).toBeInTheDocument();
-            expect(screen.getByText('Auto-scaling')).toBeInTheDocument();
-            expect(screen.getByText('Developer Tools')).toBeInTheDocument();
+            expect(screen.getByText('Threat Intelligence')).toBeInTheDocument();
+            expect(screen.getByText('Zero-Trust Access')).toBeInTheDocument();
+            expect(screen.getByText('24/7 SOC Monitoring')).toBeInTheDocument();
+            expect(screen.getByText('Network Detection')).toBeInTheDocument();
+            expect(screen.getByText('Automated Response')).toBeInTheDocument();
+            expect(screen.getByText('Pen Testing as a Service')).toBeInTheDocument();
         });
     });
 
     describe('Pricing Section', () => {
         it('should display pricing heading', () => {
             render(<OverlaySections />);
-            expect(screen.getByText('Simple, Transparent Pricing')).toBeInTheDocument();
+            expect(screen.getByText('Security for Every Stage')).toBeInTheDocument();
         });
 
         it('should display pricing tiers', () => {
             render(<OverlaySections />);
-            expect(screen.getByText('Starter')).toBeInTheDocument();
-            expect(screen.getByText('Pro')).toBeInTheDocument();
-            expect(screen.getByText('Enterprise')).toBeInTheDocument();
+            expect(screen.getByText('Recon')).toBeInTheDocument();
+            expect(screen.getByText('Hunter')).toBeInTheDocument();
+            expect(screen.getByText('Apex Predator')).toBeInTheDocument();
         });
 
         it('should have pricing values', () => {
             render(<OverlaySections />);
-            expect(screen.getByText(/\$0/)).toBeInTheDocument();
-            expect(screen.getByText(/\$99/)).toBeInTheDocument();
+            expect(screen.getByText('Free')).toBeInTheDocument();
+            expect(screen.getByText(/\$499/)).toBeInTheDocument();
             expect(screen.getByText('Custom')).toBeInTheDocument();
         });
 
-        it('should have popular badge on Pro tier', () => {
+        it('should have recommended badge on Hunter tier', () => {
             render(<OverlaySections />);
-            expect(screen.getByText('POPULAR')).toBeInTheDocument();
+            expect(screen.getByText('RECOMMENDED')).toBeInTheDocument();
         });
     });
 
     describe('CTA Section', () => {
         it('should display call to action', () => {
             render(<OverlaySections />);
-            expect(screen.getByText('Ready to Move Fast?')).toBeInTheDocument();
+            expect(screen.getByText(/Don't Wait for the Breach/)).toBeInTheDocument();
         });
 
-        it('should have trial and demo buttons', () => {
+        it('should have audit and demo buttons', () => {
             render(<OverlaySections />);
-            // Multiple "Start Free Trial" buttons exist, so use getAllByRole
-            const trialButtons = screen.getAllByRole('button', { name: /start free trial/i });
-            expect(trialButtons.length).toBeGreaterThan(0);
+            const auditButtons = screen.getAllByRole('button', { name: /start free security audit/i });
+            expect(auditButtons.length).toBeGreaterThan(0);
             expect(screen.getByRole('button', { name: /schedule demo/i })).toBeInTheDocument();
         });
     });
@@ -142,7 +141,7 @@ describe('OverlaySections', () => {
     describe('Footer', () => {
         it('should have footer navigation sections', () => {
             render(<OverlaySections />);
-            expect(screen.getByText('Product')).toBeInTheDocument();
+            expect(screen.getByText('Platform')).toBeInTheDocument();
             expect(screen.getByText('Company')).toBeInTheDocument();
             expect(screen.getByText('Resources')).toBeInTheDocument();
             expect(screen.getByText('Legal')).toBeInTheDocument();
@@ -150,7 +149,7 @@ describe('OverlaySections', () => {
 
         it('should have copyright notice', () => {
             render(<OverlaySections />);
-            expect(screen.getByText(/© 2026 Cheetah Computing/)).toBeInTheDocument();
+            expect(screen.getByText(/© 2026 CheetahSec/)).toBeInTheDocument();
         });
 
         it('should have social links', () => {
@@ -190,13 +189,13 @@ describe('OverlaySections', () => {
     describe('Styling', () => {
         it('should have gold colored elements', () => {
             render(<OverlaySections />);
-            const goldElements = document.querySelectorAll('.text-cheetah-gold');
+            const goldElements = document.querySelectorAll('[class*="text-cheetah-gold"]');
             expect(goldElements.length).toBeGreaterThan(0);
         });
 
         it('should have white title text', () => {
             render(<OverlaySections />);
-            const title = screen.getByText('Cheetah');
+            const title = screen.getByText('Threat Response');
             expect(title.closest('h1')).toHaveClass('text-white');
         });
     });
