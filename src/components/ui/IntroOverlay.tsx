@@ -27,7 +27,7 @@ export const IntroOverlay = () => {
 
                     {/* ── Background video ── */}
                     <motion.div
-                        className="absolute inset-0 z-10 opacity-30"
+                        className="absolute inset-0 z-10 opacity-50"
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.4 }}
                     >
@@ -37,16 +37,9 @@ export const IntroOverlay = () => {
                             loop
                             muted
                             playsInline
-                            className="w-full h-full object-cover grayscale"
+                            className="w-full h-full object-cover"
                         />
                     </motion.div>
-
-                    {/* ── Scan line effect ── */}
-                    <div className="absolute inset-0 z-30 pointer-events-none opacity-[0.03]"
-                        style={{
-                            backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.1) 2px, rgba(255,255,255,0.1) 4px)',
-                        }}
-                    />
 
                     {/* ── Center content ── */}
                     <motion.div

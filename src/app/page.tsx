@@ -11,9 +11,9 @@ export default function Home() {
         {/* Background Canvas Layer */}
         <CheetahCanvas
           videoSrc="/sequence/cheetah_run.mp4"
-          loopCount={2}
-          fadeOutStart={0.18}
-          fadeOutEnd={0.22}
+          loopCount={3}
+          fadeOutStart={0.45}
+          fadeOutEnd={0.55}
         />
 
         {/* Paw prints background overlay */}

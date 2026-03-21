@@ -81,10 +81,10 @@ describe('IntroOverlay', () => {
             expect(blackPanels.length).toBeGreaterThanOrEqual(2);
         });
 
-        it('should have grayscale filter on video', () => {
+        it('should have object-cover on video', () => {
             render(<IntroOverlay />);
             const video = document.querySelector('video');
-            expect(video).toHaveClass('grayscale');
+            expect(video).toHaveClass('object-cover');
         });
     });
 
