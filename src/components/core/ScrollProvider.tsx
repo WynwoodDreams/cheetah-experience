@@ -1,45 +1,62 @@
 'use client';
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { useWindowScroll, useWindowSize } from 'react-use';
+import React, { createContext, useContext, useEffect, useRef, useCallback } from 'react';
 
 interface ScrollContextType {
-    progress: number;
-    scrollY: number;
+    /** Get current progress (0-1) without triggering re-renders */
+    getProgress: () => number;
+    /** Get current scrollY without triggering re-renders */
+    getScrollY: () => number;
+    /** Subscribe to scroll updates — returns unsubscribe function */
+    subscribe: (callback: (progress: number, scrollY: number) => void) => () => void;
 }
 
-const ScrollContext = createContext<ScrollContextType>({ progress: 0, scrollY: 0 });
+const ScrollContext = createContext<ScrollContextType>({
+    getProgress: () => 0,
+    getScrollY: () => 0,
+    subscribe: () => () => {},
+});
 
 export const useScrollProgress = () => useContext(ScrollContext);
 
 export const ScrollProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [progress, setProgress] = useState(0);
-    const [scrollY, setScrollY] = useState(0);
+    const progressRef = useRef(0);
+    const scrollYRef = useRef(0);
+    const subscribersRef = useRef<Set<(progress: number, scrollY: number) => void>>(new Set());
 
-    // We can't strictly depend on react-use for high-freq scroll updates if we want to
-    // optimize the render loop, but for the React context part, it's fine.
-    // Ideally, the Canvas component will bind its own raf loop or scroll listener 
-    // to avoid React re-render overhead for the *drawing*, but this context is useful
-    // for UI reactions (fade ins, etc).
+    const getProgress = useCallback(() => progressRef.current, []);
+    const getScrollY = useCallback(() => scrollYRef.current, []);
+    const subscribe = useCallback((cb: (progress: number, scrollY: number) => void) => {
+        subscribersRef.current.add(cb);
+        return () => { subscribersRef.current.delete(cb); };
+    }, []);
 
     useEffect(() => {
-        const handleScroll = () => {
+        let ticking = false;
+
+        const update = () => {
             const currentScrollY = window.scrollY;
-            const innerHeight = window.innerHeight;
-            const scrollHeight = document.documentElement.scrollHeight;
-
-            const maxScroll = scrollHeight - innerHeight;
+            const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
             const normalized = maxScroll > 0 ? currentScrollY / maxScroll : 0;
+            const clamped = Math.min(Math.max(normalized, 0), 1);
 
-            setScrollY(currentScrollY);
-            setProgress(Math.min(Math.max(normalized, 0), 1));
+            progressRef.current = clamped;
+            scrollYRef.current = currentScrollY;
+
+            subscribersRef.current.forEach(cb => cb(clamped, currentScrollY));
+            ticking = false;
+        };
+
+        const handleScroll = () => {
+            if (!ticking) {
+                ticking = true;
+                requestAnimationFrame(update);
+            }
         };
 
         window.addEventListener('scroll', handleScroll, { passive: true });
         window.addEventListener('resize', handleScroll);
-
-        // Initial call
-        handleScroll();
+        update(); // initial
 
         return () => {
             window.removeEventListener('scroll', handleScroll);
@@ -47,8 +64,10 @@ export const ScrollProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         };
     }, []);
 
+    const value = useRef({ getProgress, getScrollY, subscribe }).current;
+
     return (
-        <ScrollContext.Provider value={{ progress, scrollY }}>
+        <ScrollContext.Provider value={value}>
             {children}
         </ScrollContext.Provider>
     );

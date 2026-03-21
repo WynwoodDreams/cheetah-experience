@@ -13,8 +13,8 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Cheetah Computing | High-Performance Infrastructure",
-  description: "Lightning-fast cloud computing and infrastructure solutions. Built for speed, designed for scale.",
+  title: "CheetahSec | Cybersecurity at Cheetah Speed",
+  description: "AI-powered threat detection and response. Detect, analyze, and neutralize cyber threats faster than attackers can move.",
 };
 
 export default function RootLayout({
